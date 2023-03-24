@@ -47,7 +47,7 @@ public class ApplyJobSteps {
         );
     }
     @Then("user upload cv and click on Apply button")
-    public void cv_upload(){
+    public void cv_upload() throws InterruptedException {
         theActorInTheSpotlight().attemptsTo(
                 WaitUntil.the(
                         OPEN_CV_UPLOAD_DIALOG,isVisible()
@@ -56,11 +56,21 @@ public class ApplyJobSteps {
                                 WaitUntil.the(
                                         CV_UPLOAD,isVisible()
                                 ).forNoMoreThan(30).seconds()
-                                        .then(
-                                                Upload.theFile(Paths.get("src/test/resources/uploads/CV.pdf")).to(CV_UPLOAD)
-                                        )
+
                         )
                 )
         );
+        theActorInTheSpotlight().attemptsTo(
+                Upload.theFile(Paths.get("src/test/java/efinancialcareers/uploads/CV.pdf")).to(CV_UPLOAD).then(
+                        Click.on(
+                                UPLOAD_BUTTON
+                        ).then(
+                                WaitUntil.the(APPLY,isVisible()).forNoMoreThan(40).seconds().then(
+                                        Click.on(APPLY)
+                                )
+                        )
+                )
+        );
+        sleep(100000);
     }
 }
